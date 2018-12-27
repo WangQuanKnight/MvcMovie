@@ -1,0 +1,6 @@
+1.Movie 
+{int ID,
+string Title,
+DateTime ReleaseDate, 格式为0:yyyy-MM-dd，可编辑
+string Genre,
+decimal Price}
