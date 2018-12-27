@@ -18,12 +18,75 @@ namespace MvcMovie.Controllers
             _context = context;
         }
 
+        /*
         // GET: Movies
-        public async Task<IActionResult> Index(string searchString = null,SelectList selectList = null)
+        public async Task<IActionResult> Index()
         {
+            var movies = from m in _context.Movie
+                         select m;
 
-            return View(await _context.Movie.ToListAsync());
+            return View(await movies.ToListAsync());
         }
+        */
+        public async Task<IActionResult> Index(string searchString,string genre)
+        {
+            IQueryable<string> genres = from m in _context.Movie
+                                        orderby m.Genre
+                                        select m.Genre;
+            var movies = from m in _context.Movie
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(m => m.Title.Contains(searchString));
+            }
+
+            if (!String.IsNullOrEmpty(genre))
+            {
+                movies = movies.Where(m => m.Genre == genre);
+            }
+
+            MovieIndex movieIndex = new MovieIndex
+            {
+                Movies = await movies.ToListAsync(),
+                Genres = new SelectList(await genres.Distinct().ToListAsync()),
+                SelectedGenre = genre,
+                SearchString = searchString
+            };
+
+            return View(movieIndex);
+        }
+
+        /*
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchString = null, string genre = null)
+        {
+            IQueryable<string> genres = from m in _context.Movie
+                                        orderby m.Genre
+                                        select m.Genre;
+            SelectList genresSelectList = new SelectList(await genres.Distinct().ToListAsync());
+
+            IQueryable<Movie> movies = from m in _context.Movie
+                                       select m;
+            if (genre != null)
+            {
+                movies = from m in movies
+                         where m.Genre == genre
+                         select m;
+            }
+
+            if (searchString != null)
+            {
+                movies = from m in movies
+                         where m.Title.Contains(searchString)
+                         select m;
+            }
+
+            ViewBag.Genres = genresSelectList;
+
+            return View(await movies.ToListAsync());
+        }
+        */
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
