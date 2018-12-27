@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MvcMovie.Models
+{
+    public class Movie
+    {
+        public int ID { get; set; }
+
+        public  string Title { get; set; }
+
+        [Display(Name = "Release Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-mm-dd}",ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        public DateTime ReleaseDate { get; set; }
+
+
+        public string Genre { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+    }
+}
